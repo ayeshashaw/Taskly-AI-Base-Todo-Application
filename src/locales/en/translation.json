@@ -1,0 +1,57 @@
+{
+  "app": {
+    "name": "Taskly"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "signup": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "emailPlaceholder": "Enter your email",
+    "passwordPlaceholder": "Enter your password",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "signupLink": "Sign up here",
+    "loginLink": "Login here",
+    "loggingIn": "Logging in...",
+    "signingUp": "Signing up..."
+  },
+  "dashboard": {
+    "myTasks": "My Tasks",
+    "tasksCompleted": "{{completed}} of {{total}} tasks completed",
+    "loading": "Loading...",
+    "welcome": "Welcome back!"
+  },
+  "todos": {
+    "addNewTask": "Add New Task",
+    "taskTitle": "Task Title",
+    "description": "Description",
+    "descriptionOptional": "Description (optional)",
+    "addTask": "Add Task",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "noTasksYet": "No tasks yet",
+    "createFirst": "Create your first task to get started!",
+    "loadingTasks": "Loading tasks...",
+    "deleteConfirm": "Are you sure you want to delete this task?",
+    "searchTasks": "Search tasks...",
+    "filterByDate": "Filter by Date",
+    "all": "All",
+    "dueDate": "Due Date",
+    "noMatchingTasks": "No matching tasks found",
+    "updateTask": "Update Task",
+    "selectDate": "Select Date",
+    "status": "Status",
+    "notStarted": "Not Started",
+    "inProgress": "In Progress",
+    "completed": "Completed"
+  },
+  "language": {
+    "label": "Language",
+    "english": "English",
+    "hindi": "हिन्दी"
+  }
+}
