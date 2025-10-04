@@ -5,7 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './TodoList.css';
 
-const TodoList = () => {
+const TodoList = ({ mode = 'dashboard' }) => {
   const { t } = useTranslation();
   const { todos, loading, fetchTodos, addTodo, updateTodo, deleteTodo } = useTodos();
   const [isAddingTodo, setIsAddingTodo] = useState(false);
@@ -26,6 +26,13 @@ const TodoList = () => {
   useEffect(() => {
     fetchTodos();
   }, []);
+
+  // Open the add task form by default in Add Task section
+  useEffect(() => {
+    if (mode === 'add-task') {
+      setIsAddingTodo(true);
+    }
+  }, [mode]);
 
   const handleAddTodo = async (e) => {
     e.preventDefault();
@@ -211,6 +218,12 @@ const TodoList = () => {
   const maxCount = Math.max(...activityData.map(d => d.total), 1);
   const timeSlots = Array.from({ length: 17 }, (_, i) => i + 6);
 
+  // Determine which sections to show based on mode
+  const showActivityCard = mode === 'dashboard' || mode === 'tasks' || mode === 'add-task' || mode === 'activity';
+  const showScheduleCard = mode === 'dashboard' || mode === 'calendar';
+  const showTaskBoard = mode === 'dashboard' || mode === 'tasks' || mode === 'add-task';
+  const isSingleColumn = !showTaskBoard; // calendar/activity focused views
+
   const goToPreviousDay = () => {
     const newDate = new Date(selectedDate);
     newDate.setDate(selectedDate.getDate() - 1);
@@ -241,10 +254,12 @@ const TodoList = () => {
 
   return (
     <div className="todolist-modern-container">
-      <div className="todolist-grid">
-        <div className="left-column">
-          {/* Activity Chart */}
-          <div className="modern-card activity-card">
+      <div className={`todolist-grid ${isSingleColumn ? 'single-column' : ''}`}>
+        {(showActivityCard || showScheduleCard) && (
+          <div className="left-column">
+            {/* Activity Chart */}
+            {showActivityCard && (
+            <div className="modern-card activity-card">
             <div className="card-header">
               <h2 className="card-title">Activity</h2>
               <div className="toggle-buttons">
@@ -415,10 +430,12 @@ const TodoList = () => {
                 )}
               </div>
             )}
-          </div>
-
-          {/* Microsoft Calendar Schedule */}
-          <div className="modern-card schedule-card">
+            </div>
+            )}
+            
+            {/* Microsoft Calendar Schedule */}
+            {showScheduleCard && (
+            <div className="modern-card schedule-card">
             <div className="card-header">
               <div>
                 <h2 className="card-title">Schedule</h2>
@@ -533,10 +550,13 @@ const TodoList = () => {
                 </div>
               </div>
             </div>
+            </div>
+            )}
           </div>
-        </div>
+        )}
 
         {/* Right Column - Task Board */}
+        {showTaskBoard && (
         <div className="right-column">
           <div className="modern-card task-board-card">
             <div className="card-header">
@@ -826,6 +846,7 @@ const TodoList = () => {
             )}
           </div>
         </div>
+        )}
       </div>
     </div>
   );

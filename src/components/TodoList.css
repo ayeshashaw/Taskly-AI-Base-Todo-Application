@@ -12,6 +12,11 @@
   gap: 24px;
 }
 
+/* Single column layout for focused views (e.g., Calendar, Activity) */
+.todolist-grid.single-column {
+  grid-template-columns: 1fr;
+}
+
 .left-column,
 .right-column {
   display: flex;

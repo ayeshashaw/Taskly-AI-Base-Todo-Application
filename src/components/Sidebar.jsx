@@ -1,8 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 
-const Sidebar = ({ user, onLogout, activeSection, onSectionChange }) => {
+const Sidebar = ({ user, onLogout, activeSection, onSectionChange, onToggleCollapsed }) => {
   const [collapsed, setCollapsed] = useState(false);
+
+  // Collapse sidebar by default on smaller screens
+  useEffect(() => {
+    const isNarrow = typeof window !== 'undefined' && window.matchMedia('(max-width: 1024px)').matches;
+    if (isNarrow) {
+      setCollapsed(true);
+      if (typeof onToggleCollapsed === 'function') {
+        onToggleCollapsed(true);
+      }
+    }
+    // no resize listener to avoid jank; user can toggle manually
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
@@ -90,7 +103,13 @@ const Sidebar = ({ user, onLogout, activeSection, onSectionChange }) => {
         </div>
         <button 
           className="sidebar-toggle-btn"
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={() => {
+            const next = !collapsed;
+            setCollapsed(next);
+            if (typeof onToggleCollapsed === 'function') {
+              onToggleCollapsed(next);
+            }
+          }}
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {collapsed ? renderIcon('menu') : renderIcon('close')}

@@ -79,6 +79,7 @@ const Dashboard = () => {
         onLogout={logout}
         activeSection={activeSection}
         onSectionChange={setActiveSection}
+        onToggleCollapsed={handleSidebarToggle}
       />
 
       {/* Main Content */}
@@ -96,7 +97,7 @@ const Dashboard = () => {
             <div className="header-right">
               <LanguageSwitcher />
               
-              <button className="header-new-task-btn">
+              <button className="header-new-task-btn" onClick={() => setActiveSection('add-task')}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <line x1="12" y1="5" x2="12" y2="19" />
                   <line x1="5" y1="12" x2="19" y2="12" />
@@ -110,17 +111,11 @@ const Dashboard = () => {
         {/* Main Content */}
         <main className="dashboard-main">
           <div className="dashboard-content">
-            {activeSection === 'dashboard' && <TodoList />}
-            {activeSection === 'tasks' && <TodoList />}
-            {activeSection === 'add-task' && (
-              <div>Add Task Form Component Here</div>
-            )}
-            {activeSection === 'activity' && (
-              <div>Activity Component Here</div>
-            )}
-            {activeSection === 'calendar' && (
-              <div>Calendar Component Here</div>
-            )}
+            {activeSection === 'dashboard' && <TodoList mode="dashboard" />}
+            {activeSection === 'tasks' && <TodoList mode="tasks" />}
+            {activeSection === 'add-task' && <TodoList mode="add-task" />}
+            {activeSection === 'activity' && <TodoList mode="activity" />}
+            {activeSection === 'calendar' && <TodoList mode="calendar" />}
           </div>
         </main>
       </div>
