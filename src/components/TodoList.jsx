@@ -546,7 +546,7 @@ const TodoList = () => {
                   {t('dashboard.tasksCompleted', { completed: completedCount, total: totalCount })}
                 </p>
               </div>
-              <button 
+              {/* <button 
                 className="add-task-btn-modern"
                 onClick={() => setIsAddingTodo(!isAddingTodo)}
               >
@@ -555,10 +555,10 @@ const TodoList = () => {
                   <line x1="5" y1="12" x2="19" y2="12"/>
                 </svg>
                 {isAddingTodo ? t('todos.cancel') : 'All task'}
-              </button>
+              </button> */}
             </div>
 
-            <div className="search-bar-modern">
+            {/* <div className="search-bar-modern">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="11" cy="11" r="8"/>
                 <path d="m21 21-4.35-4.35"/>
@@ -592,9 +592,9 @@ const TodoList = () => {
                   dropdownMode="select"
                 />
               </div>
-            </div>
+            </div> */}
 
-            <div className="status-filter-container">
+            {/* <div className="status-filter-container">
               <div className="status-filter-label">{t('todos.status')}:</div>
               <select
                 className="status-filter-select"
@@ -606,7 +606,7 @@ const TodoList = () => {
                 <option value="in_progress">{t('todos.inProgress')}</option>
                 <option value="completed">{t('todos.completed')}</option>
               </select>
-            </div>
+            </div> */}
 
             {totalCount > 0 && (
               <div className="progress-section-modern">

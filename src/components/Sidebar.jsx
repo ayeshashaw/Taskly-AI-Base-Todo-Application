@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Sidebar.css';
+import CalendarWidget from './CalendarWidget';
 
 const Sidebar = ({ user, onLogout, activeSection, onSectionChange }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -86,7 +87,7 @@ const Sidebar = ({ user, onLogout, activeSection, onSectionChange }) => {
           <div className="sidebar-logo-icon">
             {renderIcon('check')}
           </div>
-          <span className="sidebar-logo-text">TaskFlow</span>
+          <span className="sidebar-logo-text">Taskly</span>
         </div>
         <button 
           className="sidebar-toggle-btn"
@@ -114,6 +115,13 @@ const Sidebar = ({ user, onLogout, activeSection, onSectionChange }) => {
           ))}
         </ul>
       </nav>
+
+      {/* Calendar Section (compact, toolbar hidden) */}
+      {activeSection === 'calendar' && !collapsed && (
+        <div className="sidebar-calendar" style={{ padding: '0 12px 12px 12px' }}>
+          <CalendarWidget defaultView="day" compact showToolbar={false} />
+        </div>
+      )}
 
       {/* User Section */}
       <div className="sidebar-footer">
