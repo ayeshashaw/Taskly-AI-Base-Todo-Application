@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './Sidebar.css';
 import CalendarWidget from './CalendarWidget';
 
 const Sidebar = ({ user, onLogout, activeSection, onSectionChange }) => {
+  const { t } = useTranslation();
   const [collapsed, setCollapsed] = useState(false);
 
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
-    { id: 'add-task', label: 'Add Task', icon: 'plus' },
-    { id: 'tasks', label: 'Tasks', icon: 'tasks' },
-    { id: 'activity', label: 'My Activity', icon: 'activity' },
-    { id: 'calendar', label: 'Calendar', icon: 'calendar' },
+    { id: 'dashboard', label: t('sidebar.dashboard'), icon: 'dashboard' },
+    { id: 'add-task', label: t('sidebar.addTask'), icon: 'plus' },
+    { id: 'tasks', label: t('sidebar.tasks'), icon: 'tasks' },
+    { id: 'activity', label: t('sidebar.myActivity'), icon: 'activity' },
+    { id: 'calendar', label: t('sidebar.calendar'), icon: 'calendar' },
   ];
 
   const renderIcon = (iconName) => {
@@ -87,12 +89,12 @@ const Sidebar = ({ user, onLogout, activeSection, onSectionChange }) => {
           <div className="sidebar-logo-icon">
             {renderIcon('check')}
           </div>
-          <span className="sidebar-logo-text">Taskly</span>
+          <span className="sidebar-logo-text">{t('app.name')}</span>
         </div>
         <button 
           className="sidebar-toggle-btn"
           onClick={() => setCollapsed(!collapsed)}
-          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          title={collapsed ? t('sidebar.expandSidebar') : t('sidebar.collapseSidebar')}
         >
           {collapsed ? renderIcon('menu') : renderIcon('close')}
         </button>
@@ -133,7 +135,7 @@ const Sidebar = ({ user, onLogout, activeSection, onSectionChange }) => {
             <span className="sidebar-user-name">
               {user?.email?.split('@')[0] || 'User'}
             </span>
-            <span className="sidebar-user-role">User</span>
+            <span className="sidebar-user-role">{t('sidebar.user')}</span>
           </div>
           <button 
             className="sidebar-logout-btn"

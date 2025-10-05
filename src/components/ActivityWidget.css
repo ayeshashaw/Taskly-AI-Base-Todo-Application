@@ -97,3 +97,48 @@
   .activity-chart { height: 180px; }
   .chart-bar-stacked { width: 14px; }
 }
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .activity-legend {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .legend-item {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .activity-widget-card {
+    padding: 12px;
+  }
+  
+  .card-title {
+    font-size: 16px;
+  }
+  
+  .toggle-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .toggle-btn {
+    flex: 1;
+    padding: 8px 12px;
+  }
+  
+  .pie-chart-container {
+    flex-direction: column;
+  }
+  
+  .today-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+}

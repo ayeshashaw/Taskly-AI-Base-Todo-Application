@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import supabase from '../database/superbaseClient';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import './Register&Login.css'; // ✅ same CSS file
 
 const Login = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -25,7 +28,7 @@ const Login = () => {
     }
 
     if (data?.user) {
-      setMessage("Login successful!");
+      setMessage(t('auth.loginSuccessful'));
       setTimeout(() => {
         navigate('/dashboard');
       }, 500);
@@ -57,7 +60,7 @@ const Login = () => {
             <span></span>
             <span></span>
           </div>
-          <span className="logo-text">Taskly</span>
+          <span className="logo-text">{t('app.name')}</span>
         </div>
 
         {/* <div className="illustration">
@@ -147,42 +150,45 @@ const Login = () => {
       <div className="register-right">
         <div className="register-header">
           <span className="sign-in-link">
-            Don’t have an account? <Link to="/register">SIGN UP</Link>
+            {t('auth.dontHaveAccount')} <Link to="/register">{t('auth.signupLink')}</Link>
           </span>
+          <div style={{ marginLeft: '20px' }}>
+            <LanguageSwitcher />
+          </div>
         </div>
 
         <div className="register-form-wrapper">
-          <h1>Welcome back!</h1>
-          <p className="subtitle">Login to your account</p>
+          <h1>{t('auth.welcomeBack')}</h1>
+          <p className="subtitle">{t('auth.loginToAccount')}</p>
 
           {message && (
-            <div className={`message ${message.includes('successful') ? 'success' : 'error'}`}>
+            <div className={`message ${message.includes('successful') || message === t('auth.loginSuccessful') ? 'success' : 'error'}`}>
               {message}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="register-form">
             <div className="form-group">
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">{t('auth.email')}</label>
               <input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="taskly@gmail.com"
+                placeholder={t('auth.emailPlaceholder')}
                 required
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">{t('auth.password')}</label>
               <div className="password-wrapper">
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Your password"
+                  placeholder={t('auth.passwordPlaceholder')}
                   required
                 />
                 <button
@@ -209,12 +215,12 @@ const Login = () => {
             </div>
 
             <button type="submit" className="submit-btn">
-              Login
+              {t('auth.login')}
             </button>
           </form>
 
           <div className="social-login">
-            <p>Or login with</p>
+            <p>{t('auth.orLoginWith')}</p>
             <div className="social-buttons">
               <button className="social-btn google" onClick={handleGoogleSignIn} aria-label="Login with Google">
                 <svg viewBox="0 0 24 24" fill="currentColor">

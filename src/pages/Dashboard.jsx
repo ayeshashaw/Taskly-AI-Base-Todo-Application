@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import supabase from '../database/superbaseClient';
 import TodoList from '../components/TodoList';
+import AddTask from '../components/AddTask';
+import TaskBoard from '../components/TaskBoard';
+import ActivityWidget from '../components/ActivityWidget';
+import CalendarWidget from '../components/CalendarWidget';
 import Sidebar from '../components/Sidebar';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import './Dashboard.css';
@@ -12,7 +16,6 @@ const Dashboard = () => {
   const { t } = useTranslation();
   const [user, setUser] = useState(null);
   const [activeSection, setActiveSection] = useState('dashboard');
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -46,11 +49,6 @@ const Dashboard = () => {
     navigate('/login');
   };
 
-  // Listen for sidebar collapse state (you'll need to pass this from Sidebar)
-  const handleSidebarToggle = (collapsed) => {
-    setSidebarCollapsed(collapsed);
-  };
-
   if (!user) {
     return (
       <div className="loading-container">
@@ -62,18 +60,39 @@ const Dashboard = () => {
 
   const getSectionTitle = () => {
     const titles = {
-      'dashboard':  'Dashboard',
-      'add-task': 'Add Task',
-      'tasks': 'Tasks',
-      'activity': 'My Activity',
-      'calendar': 'Calendar'
+      'dashboard': t('sidebar.dashboard'),
+      'add-task': t('sidebar.addTask'),
+      'tasks': t('sidebar.tasks'),
+      'activity': t('sidebar.myActivity'),
+      'calendar': t('sidebar.calendar')
     };
-    return titles[activeSection] || 'Dashboard';
+    return titles[activeSection] || t('sidebar.dashboard');
+  };
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'dashboard':
+        return <TodoList />;
+      case 'add-task':
+        return <AddTask />;
+      case 'tasks':
+        return <TaskBoard showControls={true} allowEdit={true} />;
+      case 'activity':
+        return <ActivityWidget />;
+      case 'calendar':
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <CalendarWidget defaultView="week" compact={false} showToolbar={true} />
+            <TaskBoard showControls={true} allowEdit={true} />
+          </div>
+        );
+      default:
+        return <TodoList />;
+    }
   };
 
   return (
     <div className="dashboard-container">
-      {/* Sidebar */}
       <Sidebar 
         user={user}
         onLogout={logout}
@@ -81,39 +100,25 @@ const Dashboard = () => {
         onSectionChange={setActiveSection}
       />
 
-      {/* Main Content */}
-      <div className={`dashboard-main-wrapper ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
-        {/* Header */}
+      <div className="dashboard-main-wrapper">
         <header className="dashboard-header">
           <div className="header-content">
             <div className="header-left">
               <h1 className="page-title">{getSectionTitle()}</h1>
               <p className="page-subtitle">
-                Welcome back, {user.email?.split('@')[0]}!
+                {t('dashboard.welcome')}, {user.email?.split('@')[0]}!
               </p>
             </div>
             
             <div className="header-right">
               <LanguageSwitcher />
-              
             </div>
           </div>
         </header>
 
-        {/* Main Content */}
         <main className="dashboard-main">
           <div className="dashboard-content">
-            {activeSection === 'dashboard' && <TodoList />}
-            {activeSection === 'tasks' && <TodoList />}
-            {activeSection === 'add-task' && (
-              <div>Add Task Form Component Here</div>
-            )}
-            {activeSection === 'activity' && (
-              <div>Activity Component Here</div>
-            )}
-            {activeSection === 'calendar' && (
-              <div>Calendar Component Here</div>
-            )}
+            {renderContent()}
           </div>
         </main>
       </div>

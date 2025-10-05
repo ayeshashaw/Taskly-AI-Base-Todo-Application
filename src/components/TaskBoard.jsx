@@ -1,10 +1,12 @@
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTodos } from '../context/TodoContext';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './TaskBoard.css';
 
 const TaskBoard = ({ showControls = true, allowEdit = true }) => {
+  const { t } = useTranslation();
   const { todos, updateTodo, deleteTodo } = useTodos();
   const [searchTerm, setSearchTerm] = useState('');
   const [dateFilter, setDateFilter] = useState(null);
@@ -60,7 +62,7 @@ const TaskBoard = ({ showControls = true, allowEdit = true }) => {
   return (
     <div className="taskboard-card">
       <div className="taskboard-header">
-        <h2 className="taskboard-title">Tasks</h2>
+        <h2 className="taskboard-title">{t('todos.taskBoard')}</h2>
         {showControls && (
           <div className="taskboard-progress">
             <div className="progress-bar"><div className="progress-fill" style={{ width: `${progress}%` }}></div></div>
@@ -76,14 +78,14 @@ const TaskBoard = ({ showControls = true, allowEdit = true }) => {
               <circle cx="11" cy="11" r="8"/>
               <path d="m21 21-4.35-4.35"/>
             </svg>
-            <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search tasks" />
+            <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder={t('todos.searchTasks')} />
           </div>
           <div className="filters">
             <DatePicker
               selected={dateFilter}
               onChange={(date) => setDateFilter(date)}
               className="date-input"
-              placeholderText="Filter by date"
+              placeholderText={t('todos.filterByDate')}
               isClearable
               showMonthDropdown
               showYearDropdown
@@ -91,10 +93,10 @@ const TaskBoard = ({ showControls = true, allowEdit = true }) => {
               dateFormat="dd/MM/yyyy"
             />
             <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="status-select">
-              <option value="all">All</option>
-              <option value="not_started">Not Started</option>
-              <option value="in_progress">In Progress</option>
-              <option value="completed">Completed</option>
+              <option value="all">{t('todos.all')}</option>
+              <option value="not_started">{t('todos.notStarted')}</option>
+              <option value="in_progress">{t('todos.inProgress')}</option>
+              <option value="completed">{t('todos.completed')}</option>
             </select>
           </div>
         </div>
@@ -106,11 +108,11 @@ const TaskBoard = ({ showControls = true, allowEdit = true }) => {
             <div className="task-main">
               {editingId === todo.id ? (
                 <div className="edit-fields">
-                  <input className="edit-input" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} placeholder="Title" />
-                  <textarea className="edit-input" value={editDescription} onChange={(e) => setEditDescription(e.target.value)} placeholder="Description" />
+                  <input className="edit-input" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} placeholder={t('todos.title')} />
+                  <textarea className="edit-input" value={editDescription} onChange={(e) => setEditDescription(e.target.value)} placeholder={t('todos.description')} />
                   <div className="edit-actions">
-                    <button className="save-btn" onClick={saveEdit}>Save</button>
-                    <button className="cancel-btn" onClick={cancelEdit}>Cancel</button>
+                    <button className="save-btn" onClick={saveEdit}>{t('todos.save')}</button>
+                    <button className="cancel-btn" onClick={cancelEdit}>{t('todos.cancel')}</button>
                   </div>
                 </div>
               ) : (
@@ -129,7 +131,7 @@ const TaskBoard = ({ showControls = true, allowEdit = true }) => {
                 <span className="due-date">{new Date(todo.due_date).toLocaleDateString()}</span>
               )}
               {allowEdit && editingId !== todo.id && (
-                <button className="edit-btn" onClick={() => startEdit(todo)} title="Edit">Edit</button>
+                <button className="edit-btn" onClick={() => startEdit(todo)} title={t('todos.edit')}>{t('todos.edit')}</button>
               )}
               <button className="delete-btn" onClick={() => deleteTodo(todo.id)} title="Delete">✕</button>
             </div>

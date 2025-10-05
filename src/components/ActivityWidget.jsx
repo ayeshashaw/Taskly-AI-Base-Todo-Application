@@ -1,9 +1,11 @@
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTodos } from '../context/TodoContext';
 import './ActivityWidget.css';
 
 // Reusable activity summary (week/day)
 const ActivityWidget = () => {
+  const { t } = useTranslation();
   const { todos } = useTodos();
   const [view, setView] = useState('week'); // 'week' | 'day'
 
@@ -52,10 +54,10 @@ const ActivityWidget = () => {
   return (
     <div className="activity-widget-card">
       <div className="card-header">
-        <h2 className="card-title">Activity</h2>
+        <h2 className="card-title">{t('activity.activity')}</h2>
         <div className="toggle-buttons">
-          <button className={`toggle-btn ${view === 'week' ? 'active' : ''}`} onClick={() => setView('week')}>Week</button>
-          <button className={`toggle-btn ${view === 'day' ? 'active' : ''}`} onClick={() => setView('day')}>Day</button>
+          <button className={`toggle-btn ${view === 'week' ? 'active' : ''}`} onClick={() => setView('week')}>{t('activity.week')}</button>
+          <button className={`toggle-btn ${view === 'day' ? 'active' : ''}`} onClick={() => setView('day')}>{t('activity.day')}</button>
         </div>
       </div>
 
@@ -64,15 +66,15 @@ const ActivityWidget = () => {
           <div className="activity-legend">
             <div className="legend-item">
               <div className="legend-color" style={{ background: '#10b981' }}></div>
-              <span>Completed</span>
+              <span>{t('activity.completed')}</span>
             </div>
             <div className="legend-item">
               <div className="legend-color" style={{ background: '#8b5cf6' }}></div>
-              <span>In Progress</span>
+              <span>{t('activity.inProgress')}</span>
             </div>
             <div className="legend-item">
               <div className="legend-color" style={{ background: '#f97316' }}></div>
-              <span>Not Started</span>
+              <span>{t('activity.notStarted')}</span>
             </div>
           </div>
 
@@ -107,19 +109,19 @@ const ActivityWidget = () => {
       ) : (
         <div className="today-summary">
           <div className="summary-item">
-            <span className="summary-label">Completed</span>
+            <span className="summary-label">{t('activity.completed')}</span>
             <span className="summary-value">{todayData.completed}</span>
           </div>
           <div className="summary-item">
-            <span className="summary-label">In Progress</span>
+            <span className="summary-label">{t('activity.inProgress')}</span>
             <span className="summary-value">{todayData.inProgress}</span>
           </div>
           <div className="summary-item">
-            <span className="summary-label">Not Started</span>
+            <span className="summary-label">{t('activity.notStarted')}</span>
             <span className="summary-value">{todayData.notStarted}</span>
           </div>
           <div className="summary-item">
-            <span className="summary-label">Total</span>
+            <span className="summary-label">{t('activity.total')}</span>
             <span className="summary-value">{todayData.total}</span>
           </div>
         </div>

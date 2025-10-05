@@ -29,3 +29,25 @@
 @media (max-width: 900px) {
   .addtask-layout { grid-template-columns: 1fr; }
 }
+/* Additional Mobile Responsiveness */
+@media (max-width: 600px) {
+  .addtask-form {
+    padding: 12px;
+  }
+  
+  .form-title {
+    font-size: 18px;
+  }
+  
+  .form-row.two-cols {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .submit-btn, .reset-btn {
+    width: 100%;
+  }
+}

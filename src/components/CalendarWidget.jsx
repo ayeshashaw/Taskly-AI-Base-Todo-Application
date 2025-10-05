@@ -1,9 +1,11 @@
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTodos } from '../context/TodoContext';
 import './CalendarWidget.css';
 
 // Compact, reusable calendar (day/week) extracted from dashboard
 const CalendarWidget = ({ defaultView = 'week', compact = false, showToolbar = true }) => {
+  const { t } = useTranslation();
   const { todos } = useTodos();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [view, setView] = useState(defaultView); // 'day' | 'week'
@@ -88,7 +90,7 @@ const CalendarWidget = ({ defaultView = 'week', compact = false, showToolbar = t
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
-          <button className="toolbar-btn" onClick={goToToday} aria-label="Today">Today</button>
+          <button className="toolbar-btn" onClick={goToToday} aria-label={t('calendar.today')}>{t('calendar.today')}</button>
           <button className="toolbar-btn" onClick={goToNext} aria-label="Next">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="9 18 15 12 9 6" />
@@ -99,11 +101,11 @@ const CalendarWidget = ({ defaultView = 'week', compact = false, showToolbar = t
           <button 
             className={`view-toggle ${view === 'day' ? 'active' : ''}`} 
             onClick={() => setView('day')}
-          >Day</button>
+          >{t('activity.day')}</button>
           <button 
             className={`view-toggle ${view === 'week' ? 'active' : ''}`} 
             onClick={() => setView('week')}
-          >Week</button>
+          >{t('activity.week')}</button>
         </div>
       </div>
       )}

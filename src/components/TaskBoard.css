@@ -60,3 +60,65 @@
   .search input { width: 100%; }
   .task-meta { flex-wrap: wrap; }
 }
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .taskboard-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search {
+    width: 100%;
+  }
+  
+  .search input {
+    width: 100%;
+  }
+  
+  .filters {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  
+  .date-input, .status-select {
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  .taskboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .taskboard-progress {
+    width: 100%;
+  }
+  
+  .progress-bar {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .taskboard-card {
+    padding: 12px;
+  }
+  
+  .taskboard-title {
+    font-size: 16px;
+  }
+  
+  .task-item {
+    flex-direction: column;
+  }
+  
+  .task-meta {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  
+  .edit-fields {
+    width: 100%;
+  }
+}

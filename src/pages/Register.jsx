@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import supabase from '../database/superbaseClient';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import './Register&Login.css';
 
 const Register = () => {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +32,7 @@ const Register = () => {
     }
 
     if (data) {
-      setMessage("User created successfully!");
+      setMessage(t('auth.userCreated'));
       setEmail("");
       setName("");
       setPassword("");
@@ -62,7 +65,7 @@ const Register = () => {
             <span></span>
             <span></span>
           </div>
-          <span className="logo-text">Taskly</span>
+          <span className="logo-text">{t('app.name')}</span>
         </div>
         
         <div className="illustration">
@@ -141,12 +144,15 @@ const Register = () => {
       {/* Right Side - Form */}
       <div className="register-right">
         <div className="register-header">
-          <span className="sign-in-link">Already have an account? <Link to="/login">SIGN IN</Link></span>
+          <span className="sign-in-link">{t('auth.alreadyHaveAccount')} <Link to="/login">{t('auth.loginLink')}</Link></span>
+          <div style={{ marginLeft: '20px' }}>
+            <LanguageSwitcher />
+          </div>
         </div>
 
         <div className="register-form-wrapper">
-          <h1>Welcome to Taskly!</h1>
-          <p className="subtitle">Register your account</p>
+          <h1>{t('auth.welcomeToTaskly')}</h1>
+          <p className="subtitle">{t('auth.registerAccount')}</p>
 
           {message && (
             <div className={`message ${message.includes('successfully') ? 'success' : 'error'}`}>
@@ -156,38 +162,38 @@ const Register = () => {
 
           <form onSubmit={handleSubmit} className="register-form">
             <div className="form-group">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="name">{t('auth.name')}</label>
               <input
                 id="name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="name"
+                placeholder={t('auth.namePlaceholder')}
                 required
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">{t('auth.email')}</label>
               <input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="taskly@gmail.com"
+                placeholder={t('auth.emailPlaceholder')}
                 required
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">{t('auth.password')}</label>
               <div className="password-wrapper">
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="8+ characters"
+                  placeholder={t('auth.passwordPlaceholder')}
                   required
                 />
                 <button
@@ -214,12 +220,12 @@ const Register = () => {
             </div>
 
             <button type="submit" className="submit-btn">
-              Login
+              {t('auth.signup')}
             </button>
           </form>
 
           <div className="social-login">
-            <p>Create account with</p>
+            <p>{t('auth.createAccountWith')}</p>
             <div className="social-buttons">
               <button className="social-btn google" onClick={handleGoogleSignIn} aria-label="Sign up with Google">
                 <svg viewBox="0 0 24 24" fill="currentColor">
