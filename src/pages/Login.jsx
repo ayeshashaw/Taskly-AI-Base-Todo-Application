@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import supabase from '../database/superbaseClient';
 import LanguageSwitcher from '../components/LanguageSwitcher';
-import './Register&Login.css'; // ✅ same CSS file
+import './Register&Login.css'; 
 
 const Login = () => {
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ const Login = () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: "http://localhost:5173/dashboard",
+        redirectTo: "https://taskly-ai.netlify.app/dashboard",
       },
     });
 
