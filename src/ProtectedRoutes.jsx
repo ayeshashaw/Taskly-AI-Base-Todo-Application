@@ -31,11 +31,11 @@ const ProtectedRoutes = ({ children }) => {
     return <div>Loading...</div>;
   }
 
-  if (authenticate) {
-    return <>{children}</>;
+  if (!authenticate) {
+    return <Navigate to="/" />;
   }
 
-  return <Navigate to="/login" />;
+  return <>{children}</>;
 };
 
 export default ProtectedRoutes;

@@ -9,14 +9,16 @@
 
 .addtask-form {
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  padding: 32px;
-  transition: box-shadow 0.3s ease;
+  border-radius: 20px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  padding: 36px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(102, 126, 234, 0.1);
 }
 
 .addtask-form:hover {
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-color: rgba(102, 126, 234, 0.2);
 }
 
 .form-header {
@@ -31,11 +33,20 @@
   font-size: 28px;
   font-weight: 700;
   color: #1f2937;
-  margin-bottom: 0;
+  margin: 0;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-title::before {
+  content: '📝';
+  -webkit-text-fill-color: initial;
+  font-size: 32px;
 }
 
 .form-row {
@@ -61,12 +72,13 @@
 .form-row textarea,
 .form-row select,
 .date-input {
-  padding: 12px 16px;
+  padding: 14px 18px;
   border: 2px solid #e5e7eb;
-  border-radius: 10px;
+  border-radius: 12px;
   font-size: 15px;
   transition: all 0.3s ease;
   font-family: inherit;
+  background: #fafbfc;
 }
 
 .form-row input:focus,
@@ -75,7 +87,9 @@
 .date-input:focus {
   outline: none;
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
+  background: white;
+  transform: translateY(-1px);
 }
 
 .form-row textarea {
@@ -92,17 +106,30 @@
 .submit-btn,
 .ai-btn-top,
 .reset-btn {
-  padding: 14px 24px;
+  padding: 16px 28px;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
+}
+
+.btn-icon {
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.submit-btn:hover:not(:disabled) .btn-icon {
+  transform: scale(1.2);
+}
+
+.reset-btn:hover .btn-icon {
+  transform: rotate(180deg);
 }
 
 .submit-btn {
@@ -166,11 +193,13 @@
 .reset-btn {
   background: #f3f4f6;
   color: #374151;
+  border: 2px solid #e5e7eb;
 }
 
 .reset-btn:hover {
   background: #e5e7eb;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .submit-btn:disabled,
@@ -197,18 +226,21 @@
   font-size: 18px;
 }
 
-.ai-tasks-preview {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  padding: 24px;
+/* AI Tasks Preview Inline - appears below title input */
+.ai-tasks-preview-inline {
+  background: linear-gradient(135deg, #f8f9ff 0%, #fff5f7 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(139, 92, 246, 0.1);
+  padding: 16px;
+  margin-top: 12px;
   animation: slideIn 0.4s ease-out;
+  border: 2px solid rgba(139, 92, 246, 0.2);
 }
 
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -217,17 +249,17 @@
 }
 
 .ai-tasks-title {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 700;
   color: #1f2937;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .sparkle {
-  font-size: 24px;
+  font-size: 18px;
   animation: sparkle 2s ease-in-out infinite;
 }
 
@@ -241,14 +273,14 @@
 }
 
 .ai-task-item {
-  padding: 16px;
-  background: linear-gradient(135deg, #f8f9ff 0%, #fff5f7 100%);
+  padding: 14px;
+  background: white;
   border: 2px solid #e5e7eb;
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
 }
 
@@ -273,26 +305,41 @@
   font-weight: 700;
 }
 
-.task-text {
-  color: #374151;
+.task-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.task-title {
+  color: #1f2937;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.task-description {
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .ai-tasks-tip {
-  margin-top: 16px;
-  padding: 12px;
+  margin-top: 12px;
+  padding: 10px 12px;
   background: #fef3c7;
   border-radius: 8px;
   color: #92400e;
-  font-size: 14px;
+  font-size: 13px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .tip-icon {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 /* Mobile Responsiveness */
@@ -305,8 +352,17 @@
     padding: 20px;
   }
 
+  .form-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .form-title {
     font-size: 24px;
+  }
+
+  .ai-btn-top {
+    width: 100%;
   }
 
   .form-row.two-cols {
@@ -323,18 +379,30 @@
     width: 100%;
   }
 
-  .ai-tasks-preview {
-    padding: 16px;
+  .ai-tasks-preview-inline {
+    padding: 12px;
   }
 
   .ai-tasks-title {
-    font-size: 18px;
+    font-size: 14px;
+  }
+
+  .task-title {
+    font-size: 14px;
+  }
+
+  .task-description {
+    font-size: 12px;
   }
 }
 
 @media (max-width: 480px) {
   .form-title {
     font-size: 20px;
+  }
+
+  .form-title::before {
+    font-size: 24px;
   }
 
   .form-row input,
@@ -350,5 +418,15 @@
   .reset-btn {
     padding: 12px 20px;
     font-size: 14px;
+  }
+
+  .ai-task-item {
+    padding: 10px;
+  }
+
+  .task-number {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
   }
 }

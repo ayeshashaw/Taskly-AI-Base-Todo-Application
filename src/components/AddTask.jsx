@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTodos } from '../context/TodoContext';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './AddTask.css';
-import { geminiGenerateTasks, mockGenerateTasks } from '../utils/taskGenerator';
+import { generateAITasks } from '../utils/taskGenerator';
 
 const AddTask = () => {
   const { t } = useTranslation();
@@ -39,33 +39,11 @@ const AddTask = () => {
     setAiTasks([]);
   };
 
-  // Handle AI task generation
-  const handleAIGenerate = async () => {
-    if (!title.trim()) {
-      setAiError('Please enter a goal or task title first!');
-      setTimeout(() => setAiError(''), 3000);
-      return;
-    }
-
-    setAiLoading(true);
-    setAiError('');
-    try {
-      const tasks = await geminiGenerateTasks(title);
-      setAiTasks(tasks);
-    } catch (error) {
-      console.error(error);
-      setAiError('AI service unavailable, showing mock tasks instead.');
-      const fallback = mockGenerateTasks(title);
-      setAiTasks(fallback);
-    } finally {
-      setAiLoading(false);
-    }
-  };
-
-  // When user clicks an AI task → fill it in the input
+  // Handle AI task selection
   const handleSelectAITask = (task) => {
-    setTitle(task);
-    setDescription(`Generated task for: ${task}`);
+    setTitle(task.title);
+    setDescription(task.description);
+    setAiTasks([]); // Close suggestions after selection
   };
 
   const handleReset = () => {
@@ -77,10 +55,36 @@ const AddTask = () => {
     setAiError('');
   };
 
+  // Auto-generate AI suggestions when the title changes (debounced)
+  useEffect(() => {
+    if (!title.trim()) {
+      setAiTasks([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setAiLoading(true);
+      setAiError('');
+      try {
+        const tasks = await generateAITasks(title);
+        setAiTasks(tasks);
+      } catch (error) {
+        console.error(error);
+        setAiError('AI service unavailable, showing mock tasks instead.');
+      } finally {
+        setAiLoading(false);
+      }
+    }, 800); // 800ms delay after user stops typing
+
+    return () => clearTimeout(timer); // cleanup on next keystroke
+  }, [title]);
+
   return (
     <div className="addtask-layout">
       <form className="addtask-form" onSubmit={onSubmit}>
-        <h2 className="form-title">{t('todos.addNewTask')}</h2>
+        <div className="form-header">
+          <h2 className="form-title">{t('todos.addNewTask')}</h2>
+        </div>
 
         <div className="form-row">
           <label>{t('todos.title')}</label>
@@ -89,6 +93,36 @@ const AddTask = () => {
             onChange={(e) => setTitle(e.target.value)}
             placeholder={t('todos.enterTaskTitle')}
           />
+          
+          {aiTasks.length > 0 && (
+            <div className="ai-tasks-preview-inline">
+              <h3 className="ai-tasks-title">
+                <span className="sparkle">✨</span>
+                Suggested Tasks
+              </h3>
+              <ul className="ai-tasks-list">
+                {aiTasks.map((task, i) => (
+                  <li
+                    key={i}
+                    className="ai-task-item"
+                    onClick={() => handleSelectAITask(task)}
+                  >
+                    <span className="task-number">{i + 1}</span>
+                    <div className="task-content">
+                      <span className="task-title">{task.title}</span>
+                      {task.description && (
+                        <p className="task-description">{task.description}</p>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <p className="ai-tasks-tip">
+                <span className="tip-icon">💡</span>
+                Click a task to fill it into the form!
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="form-row">
@@ -130,17 +164,8 @@ const AddTask = () => {
             className="submit-btn"
             disabled={submitting || !title.trim()}
           >
+            <span className="btn-icon">💾</span>
             {submitting ? t('todos.saving') : t('todos.saveTask')}
-          </button>
-
-          <button
-            type="button"
-            className="ai-btn"
-            onClick={handleAIGenerate}
-            disabled={aiLoading || !title.trim()}
-          >
-            <span className="ai-btn-icon">✨</span>
-            <span>{aiLoading ? 'Generating...' : 'AI Suggestions'}</span>
           </button>
 
           <button
@@ -148,6 +173,7 @@ const AddTask = () => {
             className="reset-btn"
             onClick={handleReset}
           >
+            <span className="btn-icon">🔄</span>
             {t('todos.reset')}
           </button>
         </div>
@@ -159,31 +185,6 @@ const AddTask = () => {
           </div>
         )}
       </form>
-
-      {aiTasks.length > 0 && (
-        <div className="ai-tasks-preview">
-          <h3 className="ai-tasks-title">
-            <span className="sparkle">✨</span>
-            Suggested Tasks for "{title}"
-          </h3>
-          <ul className="ai-tasks-list">
-            {aiTasks.map((task, i) => (
-              <li
-                key={i}
-                className="ai-task-item"
-                onClick={() => handleSelectAITask(task)}
-              >
-                <span className="task-number">{i + 1}</span>
-                <span className="task-text">{task}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="ai-tasks-tip">
-            <span className="tip-icon">💡</span>
-            Click a task to fill it into the form!
-          </p>
-        </div>
-      )}
     </div>
   );
 };
