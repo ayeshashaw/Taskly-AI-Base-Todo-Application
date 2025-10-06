@@ -1,4 +1,4 @@
-# 📝 Smart Todo Application
+# 📝 Taskly AI Base Todo Application
 
 <div align="center">
 
