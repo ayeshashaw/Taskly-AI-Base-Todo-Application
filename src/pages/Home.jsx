@@ -6,9 +6,11 @@ import {
 } from 'lucide-react';
 import './Home.css';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const {t, i18n} = useTranslation();
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [language, setLanguage] = useState(i18n.language);
   const [scrolled, setScrolled] = useState(false);
@@ -27,11 +29,11 @@ const Home = () => {
   };
 
   const handleLogin = () => {
-    window.location.href = '/login';
+    navigate('/login');
   };
 
   const handleSignup = () => {
-    window.location.href = '/register';
+    navigate('/register');
   };
 
   return (
@@ -85,7 +87,7 @@ const Home = () => {
               </div>
 
               <div className="hero-cta">
-                <button className="btn-cta" onClick={handleSignup}>
+                <button className="btn-cta" onClick={() => navigate('/register')}>
                   {t('home.hero.cta')}
                   <ChevronRight size={20} />
                 </button>
@@ -285,7 +287,7 @@ const Home = () => {
           <div className="cta-content">
             <h2 className="cta-title">{t('home.cta.title')}</h2>
             <p className="cta-subtitle">{t('home.cta.subtitle')}</p>
-            <button className="cta-button" onClick={handleSignup}>
+            <button className="cta-button" onClick={() => navigate('/register')}>
               {t('home.cta.button')}
               <ArrowRight size={20} />
             </button>
