@@ -12,6 +12,7 @@
   margin-left: 260px;
   width: calc(100% - 260px);
   transition: margin-left 0.3s ease, width 0.3s ease;
+  min-height: 100vh;
 }
 
 .dashboard-main-wrapper.sidebar-collapsed {
@@ -138,7 +139,32 @@
   font-size: 14px;
 }
 
-/* Responsive Design */
+/* Tablet Responsiveness */
+@media (max-width: 1024px) {
+  .dashboard-main-wrapper {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+  }
+  
+  .dashboard-main-wrapper.sidebar-collapsed {
+    margin-left: 70px;
+    width: calc(100% - 70px);
+  }
+  
+  .dashboard-main {
+    padding: 24px;
+  }
+  
+  .header-content {
+    padding: 16px 24px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+  }
+}
+
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
   .dashboard-main-wrapper {
     margin-left: 0;
@@ -152,14 +178,20 @@
   
   .dashboard-main {
     padding: 16px;
+    padding-top: 70px; /* Space for mobile menu button */
+  }
+  
+  .dashboard-header {
+    padding-left: 0;
   }
   
   .header-content {
     padding: 16px;
+    padding-left: 60px; /* Space for mobile menu button */
   }
   
   .page-title {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .header-right {
@@ -172,50 +204,25 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+    padding: 12px;
+    padding-left: 56px;
   }
-  .page-title { font-size: 20px; }
-  .page-subtitle { font-size: 12px; }
+  
+  .page-title { 
+    font-size: 20px; 
+  }
+  
+  .page-subtitle { 
+    font-size: 12px; 
+  }
+  
+  .dashboard-main {
+    padding: 12px;
+    padding-top: 65px;
+  }
 }
-/* Mobile menu toggle button */
+
+/* Remove old mobile menu toggle if exists */
 .mobile-menu-toggle {
   display: none;
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 200;
-  padding: 10px;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.mobile-menu-toggle svg {
-  width: 24px;
-  height: 24px;
-  color: #374151;
-  stroke-width: 2;
-}
-
-@media (max-width: 768px) {
-  .mobile-menu-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .dashboard-header {
-    padding-left: 70px;
-  }
-}
-
-@media (max-width: 480px) {
-  .page-title {
-    font-size: 20px;
-  }
-  
-  .page-subtitle {
-    font-size: 12px;
-  }
 }

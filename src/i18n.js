@@ -9,18 +9,19 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    resources: {
-      en: { translation: enTranslation },
-      hi: { translation: hiTranslation }
-    },
+    debug: true,
     fallbackLng: 'en',
     interpolation: {
-      escapeValue: false
+      escapeValue: false,
     },
-    detection: {
-      order: ['localStorage', 'navigator'],
-      caches: ['localStorage']
-    }
+    resources: {
+      en: {
+        translation: enTranslation,
+      },
+      hi: {
+        translation: hiTranslation,
+      },
+    },
   });
 
 export default i18n;

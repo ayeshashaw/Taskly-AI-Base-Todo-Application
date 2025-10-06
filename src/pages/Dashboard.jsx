@@ -46,7 +46,7 @@ const Dashboard = () => {
       console.error(error);
       return;
     }
-    navigate('/login');
+    navigate('/');
   };
 
   if (!user) {
@@ -83,7 +83,6 @@ const Dashboard = () => {
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <CalendarWidget defaultView="week" compact={false} showToolbar={true} />
-            <TaskBoard showControls={true} allowEdit={true} />
           </div>
         );
       default:

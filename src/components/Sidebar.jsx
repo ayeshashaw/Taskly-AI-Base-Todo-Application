@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Sidebar.css';
-import CalendarWidget from './CalendarWidget';
 
 const Sidebar = ({ user, onLogout, activeSection, onSectionChange }) => {
   const { t } = useTranslation();
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const menuItems = [
     { id: 'dashboard', label: t('sidebar.dashboard'), icon: 'dashboard' },
@@ -81,72 +81,91 @@ const Sidebar = ({ user, onLogout, activeSection, onSectionChange }) => {
     return icons[iconName] || icons.dashboard;
   };
 
+  const handleSectionChange = (sectionId) => {
+    onSectionChange(sectionId);
+    setMobileOpen(false);
+  };
+
   return (
-    <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
-      {/* Header */}
-      <div className="sidebar-header">
-        <div className="sidebar-logo">
-          <div className="sidebar-logo-icon">
-            {renderIcon('check')}
-          </div>
-          <span className="sidebar-logo-text">{t('app.name')}</span>
-        </div>
-        <button 
-          className="sidebar-toggle-btn"
-          onClick={() => setCollapsed(!collapsed)}
-          title={collapsed ? t('sidebar.expandSidebar') : t('sidebar.collapseSidebar')}
-        >
-          {collapsed ? renderIcon('menu') : renderIcon('close')}
-        </button>
-      </div>
+    <>
+      {/* Mobile Menu Toggle */}
+      <button 
+        className="mobile-sidebar-toggle"
+        onClick={() => setMobileOpen(!mobileOpen)}
+        aria-label="Toggle menu"
+      >
+        {renderIcon(mobileOpen ? 'close' : 'menu')}
+      </button>
 
-      {/* Navigation */}
-      <nav className="sidebar-nav">
-        <ul className="sidebar-menu">
-          {menuItems.map((item) => (
-            <li key={item.id} className="sidebar-menu-item">
-              <button
-                className={`sidebar-menu-btn ${activeSection === item.id ? 'active' : ''}`}
-                onClick={() => onSectionChange(item.id)}
-                title={collapsed ? item.label : ''}
-              >
-                {renderIcon(item.icon)}
-                <span className="sidebar-menu-label">{item.label}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      {/* Calendar Section (compact, toolbar hidden) */}
-      {activeSection === 'calendar' && !collapsed && (
-        <div className="sidebar-calendar" style={{ padding: '0 12px 12px 12px' }}>
-          <CalendarWidget defaultView="day" compact showToolbar={false} />
-        </div>
+      {/* Mobile Overlay */}
+      {mobileOpen && (
+        <div 
+          className="sidebar-overlay"
+          onClick={() => setMobileOpen(false)}
+        />
       )}
 
-      {/* User Section */}
-      <div className="sidebar-footer">
-        <div className="sidebar-user">
-          <div className="sidebar-user-avatar">
-            {user?.email?.charAt(0).toUpperCase() || 'U'}
-          </div>
-          <div className="sidebar-user-info">
-            <span className="sidebar-user-name">
-              {user?.email?.split('@')[0] || 'User'}
-            </span>
-            <span className="sidebar-user-role">{t('sidebar.user')}</span>
+      <aside className={`sidebar ${collapsed ? 'collapsed' : ''} ${mobileOpen ? 'mobile-open' : ''}`}>
+        {/* Header */}
+        <div className="sidebar-header">
+          <div className="sidebar-logo">
+            <div className="sidebar-logo-icon">
+              {renderIcon('check')}
+            </div>
+            {!collapsed && <span className="sidebar-logo-text">{t('app.name')}</span>}
           </div>
           <button 
-            className="sidebar-logout-btn"
-            onClick={onLogout}
-            title="Logout"
+            className="sidebar-toggle-btn"
+            onClick={() => setCollapsed(!collapsed)}
+            title={collapsed ? t('sidebar.expandSidebar') : t('sidebar.collapseSidebar')}
           >
-            {renderIcon('logout')}
+            {collapsed ? renderIcon('menu') : renderIcon('close')}
           </button>
         </div>
-      </div>
-    </aside>
+
+        {/* Navigation */}
+        <nav className="sidebar-nav">
+          <ul className="sidebar-menu">
+            {menuItems.map((item) => (
+              <li key={item.id} className="sidebar-menu-item">
+                <button
+                  className={`sidebar-menu-btn ${activeSection === item.id ? 'active' : ''}`}
+                  onClick={() => handleSectionChange(item.id)}
+                  title={collapsed ? item.label : ''}
+                >
+                  {renderIcon(item.icon)}
+                  {!collapsed && <span className="sidebar-menu-label">{item.label}</span>}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* User Section */}
+        <div className="sidebar-footer">
+          <div className="sidebar-user">
+            <div className="sidebar-user-avatar">
+              {user?.email?.charAt(0).toUpperCase() || 'U'}
+            </div>
+            {!collapsed && (
+              <div className="sidebar-user-info">
+                <span className="sidebar-user-name">
+                  {user?.email?.split('@')[0] || 'User'}
+                </span>
+                <span className="sidebar-user-role">{t('sidebar.user')}</span>
+              </div>
+            )}
+            <button 
+              className="sidebar-logout-btn"
+              onClick={onLogout}
+              title="Logout"
+            >
+              {renderIcon('logout')}
+            </button>
+          </div>
+        </div>
+      </aside>
+    </>
   );
 };
 

@@ -101,5 +101,79 @@
     "label": "Language",
     "english": "English",
     "hindi": "हिन्दी"
+  },
+  "home": {
+    "nav": {
+      "login": "Login",
+      "signup": "Sign up"
+    },
+    "hero": {
+      "title1": "Revolutionise",
+      "title2": "your productivity",
+      "title3": "with",
+      "titleHighlight": "Taskly",
+      "subtitle": "We empower your business by keeping everyone accountable for their work.",
+      "cta": "Request a demo",
+      "badge": "It's the high time for change"
+    },
+    "section": {
+      "title": "Manage your timeline with",
+      "subtitle": "unparalleled efficiency",
+      "description": "Experience the ultimate task management solution designed to suit all styles of work, with an all-in-one tool that streamlines your workflow and simplifies your daily tasks."
+    },
+    "features": {
+      "dashboard": {
+        "title": "Task timelines dashboard",
+        "description": "Experience the ultimate task management solution designed to suit all styles of work, with an all-in-one tool that streamlines workflow and simplifies your daily tasks."
+      },
+      "visualize": {
+        "title": "Visualise complex timelines",
+        "description": "Experience the ultimate task management solution designed to suit all styles of work, with an all-in-one tool that streamlines workflow and simplifies your daily tasks."
+      },
+      "calendar": {
+        "title": "Calendar & task management",
+        "description": "Experience the ultimate task management solution designed to suit all styles of work, with an all-in-one tool that streamlines workflow and simplifies your daily tasks."
+      }
+    },
+    "engagingSection": {
+      "title": "Why Choose Taskly?",
+      "intuitiveDesign": "✔️ Intuitive design for all users",
+      "fastSecureReliable": "✔️ Fast, secure, and reliable",
+      "smartReminders": "✔️ Smart reminders and notifications",
+      "collaborativeFeatures": "✔️ Collaborative features for teams"
+    },
+    "additionalFeatures": {
+      "title": "Everything you need to stay productive",
+      "ai": {
+        "title": "AI Task Generator",
+        "description": "Let AI suggest tasks based on your goals. Get 3-5 smart recommendations instantly."
+      },
+      "multilingual": {
+        "title": "Multilingual Support",
+        "description": "Work in your preferred language. Full support for English and Hindi with more coming soon."
+      },
+      "secure": {
+        "title": "Secure & Private",
+        "description": "Your data is encrypted and secure. Only you have access to your tasks and information."
+      },
+      "realtime": {
+        "title": "Real-time Updates",
+        "description": "Changes sync instantly across all your devices. Stay updated wherever you are."
+      },
+      "dashboard": {
+        "title": "Smart Dashboard",
+        "description": "Visual insights into your productivity. Track progress and manage tasks efficiently."
+      },
+      "search": {
+        "title": "Quick Search & Filter",
+        "description": "Find any task instantly with powerful search and smart filtering options."
+      }
+    },
+    "cta": {
+      "title": "Ready to boost your productivity?",
+      "subtitle": "Join thousands of teams already using Taskly to manage their daily tasks efficiently.",
+      "button": "Get Started Free"
+    }
   }
+
 }

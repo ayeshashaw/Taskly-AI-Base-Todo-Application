@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useTodos } from '../context/TodoContext';
 import './CalendarWidget.css';
 
-// Compact, reusable calendar (day/week) extracted from dashboard
 const CalendarWidget = ({ defaultView = 'week', compact = false, showToolbar = true }) => {
   const { t } = useTranslation();
   const { todos } = useTodos();
