@@ -69,7 +69,7 @@ A modern, AI-powered task management application with intelligent task suggestio
 
 ### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/yourusername/todo-application.git
+git clone https://github.com/ayeshashaw/Taskly-AI-Base-Todo-Application
 cd todo-application
 ```
 
