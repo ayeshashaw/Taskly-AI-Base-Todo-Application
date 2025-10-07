@@ -1,5 +1,7 @@
 # 📝 Taskly AI Base Todo Application
 
+### 🚀 Deployed link: https://taskly-ai.netlify.app
+
 <div align="center">
 
 ![React](https://img.shields.io/badge/React-18.3.1-61dafb?style=for-the-badge&logo=react)
