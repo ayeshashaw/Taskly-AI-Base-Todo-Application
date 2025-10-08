@@ -17,6 +17,14 @@ A modern, AI-powered task management application with intelligent task suggestio
 
 ---
 
+## 🎬 Demo Video
+
+Watch the full demo on YouTube:  
+[![Taskly AI Demo](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
+
+
+---
+
 ## ✨ Features
 
 ### 🤖 AI-Powered Task Generation
@@ -60,6 +68,7 @@ A modern, AI-powered task management application with intelligent task suggestio
 | **Styling** | CSS3 with modern features |
 
 ---
+
 
 ## 🚀 Installation
 
