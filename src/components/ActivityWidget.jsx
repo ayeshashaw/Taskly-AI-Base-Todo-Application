@@ -11,12 +11,19 @@ const ActivityWidget = () => {
 
   const activityData = useMemo(() => {
     const last7Days = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     for (let i = 6; i >= 0; i--) {
       const date = new Date();
       date.setDate(date.getDate() - i);
+      date.setHours(0, 0, 0, 0);
+
       const dayTasks = todos.filter(todo => {
+        if (!todo.created_at) return false;
         const todoDate = new Date(todo.created_at);
-        return todoDate.toDateString() === date.toDateString();
+        todoDate.setHours(0, 0, 0, 0);
+        return todoDate.getTime() === date.getTime();
       });
 
       const completed = dayTasks.filter(t => t.status === 'completed').length;
@@ -29,7 +36,7 @@ const ActivityWidget = () => {
         inProgress,
         notStarted,
         total: dayTasks.length,
-        isToday: i === 0,
+        isToday: date.getTime() === today.getTime(),
       });
     }
     return last7Days;
@@ -37,10 +44,15 @@ const ActivityWidget = () => {
 
   const todayData = useMemo(() => {
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     const todayTasks = todos.filter(todo => {
+      if (!todo.created_at) return false;
       const todoDate = new Date(todo.created_at);
-      return todoDate.toDateString() === today.toDateString();
+      todoDate.setHours(0, 0, 0, 0);
+      return todoDate.getTime() === today.getTime();
     });
+
     return {
       completed: todayTasks.filter(t => t.status === 'completed').length,
       inProgress: todayTasks.filter(t => t.status === 'in_progress').length,
@@ -79,31 +91,44 @@ const ActivityWidget = () => {
           </div>
 
           <div className="activity-chart">
-            {activityData.map((data, index) => (
-              <div key={index} className="chart-bar-wrapper">
-                <div className={`chart-bar-stacked ${data.isToday ? 'today' : ''}`}>
-                  {data.completed > 0 && (
-                    <div
-                      className="chart-bar-segment completed"
-                      style={{ height: `${(data.completed / maxCount) * 100}%` }}
-                    ></div>
-                  )}
-                  {data.inProgress > 0 && (
-                    <div
-                      className="chart-bar-segment in-progress"
-                      style={{ height: `${(data.inProgress / maxCount) * 100}%` }}
-                    ></div>
-                  )}
-                  {data.notStarted > 0 && (
-                    <div
-                      className="chart-bar-segment not-started"
-                      style={{ height: `${(data.notStarted / maxCount) * 100}%` }}
-                    ></div>
-                  )}
+            {activityData.map((data, index) => {
+              const totalHeight = data.total > 0 ? (data.total / maxCount) * 100 : 0;
+              const completedHeight = data.total > 0 ? (data.completed / data.total) * totalHeight : 0;
+              const inProgressHeight = data.total > 0 ? (data.inProgress / data.total) * totalHeight : 0;
+              const notStartedHeight = data.total > 0 ? (data.notStarted / data.total) * totalHeight : 0;
+
+              return (
+                <div key={index} className="chart-bar-wrapper">
+                  <div
+                    className={`chart-bar-stacked ${data.isToday ? 'today' : ''}`}
+                    style={{ height: `${totalHeight}%` }}
+                  >
+                    {data.notStarted > 0 && (
+                      <div
+                        className="chart-bar-segment not-started"
+                        style={{ flex: data.notStarted }}
+                        title={`Not Started: ${data.notStarted}`}
+                      ></div>
+                    )}
+                    {data.inProgress > 0 && (
+                      <div
+                        className="chart-bar-segment in-progress"
+                        style={{ flex: data.inProgress }}
+                        title={`In Progress: ${data.inProgress}`}
+                      ></div>
+                    )}
+                    {data.completed > 0 && (
+                      <div
+                        className="chart-bar-segment completed"
+                        style={{ flex: data.completed }}
+                        title={`Completed: ${data.completed}`}
+                      ></div>
+                    )}
+                  </div>
+                  <div className="chart-bar-label">{data.day}</div>
                 </div>
-                <div className="chart-bar-label">{data.day}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </>
       ) : (
