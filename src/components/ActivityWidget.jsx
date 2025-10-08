@@ -62,10 +62,14 @@ const ActivityWidget = () => {
 
   const maxCount = Math.max(...activityData.map(d => d.total), 1);
 
-  const createPieSlice = (startAngle, endAngle, color) => {
+  const createPieSlice = (startAngle, endAngle, color, isFullCircle = false) => {
     const radius = 90;
     const centerX = 100;
     const centerY = 100;
+
+    if (isFullCircle) {
+      return <circle key="full" cx={centerX} cy={centerY} r={radius} fill={color} />;
+    }
 
     const startRad = (startAngle * Math.PI) / 180;
     const endRad = (endAngle * Math.PI) / 180;
@@ -84,7 +88,7 @@ const ActivityWidget = () => {
       'Z'
     ].join(' ');
 
-    return <path key={startAngle} d={pathData} fill={color} />;
+    return <path key={`${startAngle}-${color}`} d={pathData} fill={color} />;
   };
 
   const renderPieChart = () => {
@@ -122,21 +126,35 @@ const ActivityWidget = () => {
     const slices = [];
     let currentAngle = -90;
 
-    if (todayData.notStarted > 0) {
-      const angle = (todayData.notStarted / total) * 360;
-      slices.push(createPieSlice(currentAngle, currentAngle + angle, '#f97316'));
-      currentAngle += angle;
-    }
+    const notStartedCount = todayData.notStarted || 0;
+    const inProgressCount = todayData.inProgress || 0;
+    const completedCount = todayData.completed || 0;
 
-    if (todayData.inProgress > 0) {
-      const angle = (todayData.inProgress / total) * 360;
-      slices.push(createPieSlice(currentAngle, currentAngle + angle, '#8b5cf6'));
-      currentAngle += angle;
-    }
+    const activeCategories = [
+      { count: notStartedCount, color: '#f97316' },
+      { count: inProgressCount, color: '#8b5cf6' },
+      { count: completedCount, color: '#10b981' }
+    ].filter(cat => cat.count > 0);
 
-    if (todayData.completed > 0) {
-      const angle = (todayData.completed / total) * 360;
-      slices.push(createPieSlice(currentAngle, currentAngle + angle, '#10b981'));
+    if (activeCategories.length === 1) {
+      slices.push(createPieSlice(0, 0, activeCategories[0].color, true));
+    } else {
+      if (notStartedCount > 0) {
+        const angle = (notStartedCount / total) * 360;
+        slices.push(createPieSlice(currentAngle, currentAngle + angle, '#f97316'));
+        currentAngle += angle;
+      }
+
+      if (inProgressCount > 0) {
+        const angle = (inProgressCount / total) * 360;
+        slices.push(createPieSlice(currentAngle, currentAngle + angle, '#8b5cf6'));
+        currentAngle += angle;
+      }
+
+      if (completedCount > 0) {
+        const angle = (completedCount / total) * 360;
+        slices.push(createPieSlice(currentAngle, currentAngle + angle, '#10b981'));
+      }
     }
 
     return (
