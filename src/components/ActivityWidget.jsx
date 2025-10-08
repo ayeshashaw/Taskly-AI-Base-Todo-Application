@@ -3,11 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { useTodos } from '../context/TodoContext';
 import './ActivityWidget.css';
 
-// Reusable activity summary (week/day)
 const ActivityWidget = () => {
   const { t } = useTranslation();
   const { todos } = useTodos();
-  const [view, setView] = useState('week'); // 'week' | 'day'
+  const [view, setView] = useState('week');
 
   const activityData = useMemo(() => {
     const last7Days = [];
@@ -63,13 +62,134 @@ const ActivityWidget = () => {
 
   const maxCount = Math.max(...activityData.map(d => d.total), 1);
 
+  const renderPieChart = () => {
+    const total = todayData.total;
+    if (total === 0) {
+      return (
+        <div className="pie-chart-container">
+          <div className="pie-chart-empty">
+            <div className="pie-chart-empty-circle">
+              <span>0</span>
+              <small>Tasks</small>
+            </div>
+          </div>
+          <div className="pie-stats">
+            <div className="stat-item">
+              <div className="stat-color completed"></div>
+              <span className="stat-label">{t('activity.completed')}</span>
+              <span className="stat-value">0</span>
+            </div>
+            <div className="stat-item">
+              <div className="stat-color in-progress"></div>
+              <span className="stat-label">{t('activity.inProgress')}</span>
+              <span className="stat-value">0</span>
+            </div>
+            <div className="stat-item">
+              <div className="stat-color not-started"></div>
+              <span className="stat-label">{t('activity.notStarted')}</span>
+              <span className="stat-value">0</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const completedPercent = (todayData.completed / total) * 100;
+    const inProgressPercent = (todayData.inProgress / total) * 100;
+    const notStartedPercent = (todayData.notStarted / total) * 100;
+
+    let cumulativePercent = 0;
+    const segments = [];
+
+    if (todayData.notStarted > 0) {
+      segments.push({
+        color: '#f97316',
+        percent: notStartedPercent,
+        offset: cumulativePercent,
+      });
+      cumulativePercent += notStartedPercent;
+    }
+
+    if (todayData.inProgress > 0) {
+      segments.push({
+        color: '#8b5cf6',
+        percent: inProgressPercent,
+        offset: cumulativePercent,
+      });
+      cumulativePercent += inProgressPercent;
+    }
+
+    if (todayData.completed > 0) {
+      segments.push({
+        color: '#10b981',
+        percent: completedPercent,
+        offset: cumulativePercent,
+      });
+    }
+
+    return (
+      <div className="pie-chart-container">
+        <div className="pie-chart-wrapper">
+          <svg viewBox="0 0 200 200" className="pie-chart">
+            {segments.map((segment, index) => {
+              const radius = 80;
+              const circumference = 2 * Math.PI * radius;
+              const strokeDasharray = `${(segment.percent / 100) * circumference} ${circumference}`;
+              const strokeDashoffset = -((segment.offset / 100) * circumference);
+
+              return (
+                <circle
+                  key={index}
+                  cx="100"
+                  cy="100"
+                  r={radius}
+                  fill="none"
+                  stroke={segment.color}
+                  strokeWidth="40"
+                  strokeDasharray={strokeDasharray}
+                  strokeDashoffset={strokeDashoffset}
+                  transform="rotate(-90 100 100)"
+                />
+              );
+            })}
+          </svg>
+          <div className="pie-chart-center">
+            <span className="pie-chart-total">{total}</span>
+            <span className="pie-chart-label">Tasks</span>
+          </div>
+        </div>
+        <div className="pie-stats">
+          <div className="stat-item">
+            <div className="stat-color completed"></div>
+            <span className="stat-label">{t('activity.completed')}</span>
+            <span className="stat-value">{todayData.completed}</span>
+          </div>
+          <div className="stat-item">
+            <div className="stat-color in-progress"></div>
+            <span className="stat-label">{t('activity.inProgress')}</span>
+            <span className="stat-value">{todayData.inProgress}</span>
+          </div>
+          <div className="stat-item">
+            <div className="stat-color not-started"></div>
+            <span className="stat-label">{t('activity.notStarted')}</span>
+            <span className="stat-value">{todayData.notStarted}</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="activity-widget-card">
       <div className="card-header">
         <h2 className="card-title">{t('activity.activity')}</h2>
         <div className="toggle-buttons">
-          <button className={`toggle-btn ${view === 'week' ? 'active' : ''}`} onClick={() => setView('week')}>{t('activity.week')}</button>
-          <button className={`toggle-btn ${view === 'day' ? 'active' : ''}`} onClick={() => setView('day')}>{t('activity.day')}</button>
+          <button className={`toggle-btn ${view === 'week' ? 'active' : ''}`} onClick={() => setView('week')}>
+            {t('activity.week')}
+          </button>
+          <button className={`toggle-btn ${view === 'day' ? 'active' : ''}`} onClick={() => setView('day')}>
+            {t('activity.day')}
+          </button>
         </div>
       </div>
 
@@ -77,79 +197,72 @@ const ActivityWidget = () => {
         <>
           <div className="activity-legend">
             <div className="legend-item">
-              <div className="legend-color" style={{ background: '#10b981' }}></div>
+              <div className="legend-color completed"></div>
               <span>{t('activity.completed')}</span>
             </div>
             <div className="legend-item">
-              <div className="legend-color" style={{ background: '#8b5cf6' }}></div>
+              <div className="legend-color in-progress"></div>
               <span>{t('activity.inProgress')}</span>
             </div>
             <div className="legend-item">
-              <div className="legend-color" style={{ background: '#f97316' }}></div>
+              <div className="legend-color not-started"></div>
               <span>{t('activity.notStarted')}</span>
             </div>
           </div>
 
-          <div className="activity-chart">
-            {activityData.map((data, index) => {
-              const totalHeight = data.total > 0 ? (data.total / maxCount) * 100 : 0;
-              const completedHeight = data.total > 0 ? (data.completed / data.total) * totalHeight : 0;
-              const inProgressHeight = data.total > 0 ? (data.inProgress / data.total) * totalHeight : 0;
-              const notStartedHeight = data.total > 0 ? (data.notStarted / data.total) * totalHeight : 0;
+          <div className="bar-graph-container">
+            <div className="bar-graph-y-axis">
+              {[...Array(5)].map((_, i) => {
+                const value = Math.ceil((maxCount / 4) * (4 - i));
+                return <span key={i} className="y-axis-label">{value}</span>;
+              })}
+              <span className="y-axis-label">0</span>
+            </div>
+            <div className="bar-graph">
+              {activityData.map((data, index) => {
+                const totalHeight = data.total > 0 ? (data.total / maxCount) * 100 : 0;
 
-              return (
-                <div key={index} className="chart-bar-wrapper">
-                  <div
-                    className={`chart-bar-stacked ${data.isToday ? 'today' : ''}`}
-                    style={{ height: `${totalHeight}%` }}
-                  >
-                    {data.notStarted > 0 && (
-                      <div
-                        className="chart-bar-segment not-started"
-                        style={{ flex: data.notStarted }}
-                        title={`Not Started: ${data.notStarted}`}
-                      ></div>
-                    )}
-                    {data.inProgress > 0 && (
-                      <div
-                        className="chart-bar-segment in-progress"
-                        style={{ flex: data.inProgress }}
-                        title={`In Progress: ${data.inProgress}`}
-                      ></div>
-                    )}
-                    {data.completed > 0 && (
-                      <div
-                        className="chart-bar-segment completed"
-                        style={{ flex: data.completed }}
-                        title={`Completed: ${data.completed}`}
-                      ></div>
-                    )}
+                return (
+                  <div key={index} className="bar-wrapper">
+                    <div className="bar-column">
+                      {data.total > 0 ? (
+                        <>
+                          {data.completed > 0 && (
+                            <div
+                              className="bar-segment completed"
+                              style={{ height: `${(data.completed / data.total) * totalHeight}%` }}
+                              title={`Completed: ${data.completed}`}
+                            ></div>
+                          )}
+                          {data.inProgress > 0 && (
+                            <div
+                              className="bar-segment in-progress"
+                              style={{ height: `${(data.inProgress / data.total) * totalHeight}%` }}
+                              title={`In Progress: ${data.inProgress}`}
+                            ></div>
+                          )}
+                          {data.notStarted > 0 && (
+                            <div
+                              className="bar-segment not-started"
+                              style={{ height: `${(data.notStarted / data.total) * totalHeight}%` }}
+                              title={`Not Started: ${data.notStarted}`}
+                            ></div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="bar-empty"></div>
+                      )}
+                      {data.isToday && <div className="today-indicator"></div>}
+                    </div>
+                    <div className={`bar-label ${data.isToday ? 'today' : ''}`}>{data.day}</div>
                   </div>
-                  <div className="chart-bar-label">{data.day}</div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </>
       ) : (
-        <div className="today-summary">
-          <div className="summary-item">
-            <span className="summary-label">{t('activity.completed')}</span>
-            <span className="summary-value">{todayData.completed}</span>
-          </div>
-          <div className="summary-item">
-            <span className="summary-label">{t('activity.inProgress')}</span>
-            <span className="summary-value">{todayData.inProgress}</span>
-          </div>
-          <div className="summary-item">
-            <span className="summary-label">{t('activity.notStarted')}</span>
-            <span className="summary-value">{todayData.notStarted}</span>
-          </div>
-          <div className="summary-item">
-            <span className="summary-label">{t('activity.total')}</span>
-            <span className="summary-value">{todayData.total}</span>
-          </div>
-        </div>
+        renderPieChart()
       )}
     </div>
   );
