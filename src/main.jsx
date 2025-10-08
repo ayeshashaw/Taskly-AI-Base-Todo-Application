@@ -5,7 +5,7 @@ import { TodoProvider } from './context/TodoContext.jsx';
 import './i18n';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './i18n';
-import { HashRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
