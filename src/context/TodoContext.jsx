@@ -1,12 +1,13 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import supabase from "../database/superbaseClient";
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import supabase from '../database/superbaseClient';
 
 const TodoContext = createContext();
 
 export function TodoProvider({ children }) {
+  const [user, setUser] = useState(null);
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true); // New state for auth loading
 
   // 🔹 Fetch todos
   async function fetchTodos() {
@@ -23,10 +24,16 @@ export function TodoProvider({ children }) {
 
   // 🔹 Auth state listener
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    const getActiveUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      setAuthLoading(false);
+    };
+    getActiveUser();
 
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null);
+      setAuthLoading(false);
     });
 
     return () => {
@@ -96,6 +103,7 @@ export function TodoProvider({ children }) {
         deleteTodo,
         signIn,
         signOut,
+        authLoading,
       }}
     >
       {children}
