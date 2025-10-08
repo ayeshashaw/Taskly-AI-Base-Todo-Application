@@ -62,6 +62,31 @@ const ActivityWidget = () => {
 
   const maxCount = Math.max(...activityData.map(d => d.total), 1);
 
+  const createPieSlice = (startAngle, endAngle, color) => {
+    const radius = 90;
+    const centerX = 100;
+    const centerY = 100;
+
+    const startRad = (startAngle * Math.PI) / 180;
+    const endRad = (endAngle * Math.PI) / 180;
+
+    const x1 = centerX + radius * Math.cos(startRad);
+    const y1 = centerY + radius * Math.sin(startRad);
+    const x2 = centerX + radius * Math.cos(endRad);
+    const y2 = centerY + radius * Math.sin(endRad);
+
+    const largeArc = endAngle - startAngle > 180 ? 1 : 0;
+
+    const pathData = [
+      `M ${centerX} ${centerY}`,
+      `L ${x1} ${y1}`,
+      `A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2}`,
+      'Z'
+    ].join(' ');
+
+    return <path key={startAngle} d={pathData} fill={color} />;
+  };
+
   const renderPieChart = () => {
     const total = todayData.total;
     if (total === 0) {
@@ -94,64 +119,31 @@ const ActivityWidget = () => {
       );
     }
 
-    const completedPercent = (todayData.completed / total) * 100;
-    const inProgressPercent = (todayData.inProgress / total) * 100;
-    const notStartedPercent = (todayData.notStarted / total) * 100;
-
-    let cumulativePercent = 0;
-    const segments = [];
+    const slices = [];
+    let currentAngle = -90;
 
     if (todayData.notStarted > 0) {
-      segments.push({
-        color: '#f97316',
-        percent: notStartedPercent,
-        offset: cumulativePercent,
-      });
-      cumulativePercent += notStartedPercent;
+      const angle = (todayData.notStarted / total) * 360;
+      slices.push(createPieSlice(currentAngle, currentAngle + angle, '#f97316'));
+      currentAngle += angle;
     }
 
     if (todayData.inProgress > 0) {
-      segments.push({
-        color: '#8b5cf6',
-        percent: inProgressPercent,
-        offset: cumulativePercent,
-      });
-      cumulativePercent += inProgressPercent;
+      const angle = (todayData.inProgress / total) * 360;
+      slices.push(createPieSlice(currentAngle, currentAngle + angle, '#8b5cf6'));
+      currentAngle += angle;
     }
 
     if (todayData.completed > 0) {
-      segments.push({
-        color: '#10b981',
-        percent: completedPercent,
-        offset: cumulativePercent,
-      });
+      const angle = (todayData.completed / total) * 360;
+      slices.push(createPieSlice(currentAngle, currentAngle + angle, '#10b981'));
     }
 
     return (
       <div className="pie-chart-container">
         <div className="pie-chart-wrapper">
           <svg viewBox="0 0 200 200" className="pie-chart">
-            {segments.map((segment, index) => {
-              const radius = 80;
-              const circumference = 2 * Math.PI * radius;
-              const strokeDasharray = `${(segment.percent / 100) * circumference} ${circumference}`;
-              const strokeDashoffset = -((segment.offset / 100) * circumference);
-
-              return (
-                <circle
-                  key={index}
-                  cx="100"
-                  cy="100"
-                  r={radius}
-                  fill="none"
-                  stroke={segment.color}
-                  strokeWidth="40"
-                  strokeDasharray={strokeDasharray}
-                  strokeDashoffset={strokeDashoffset}
-                  transform="rotate(-90 100 100)"
-                />
-              );
-            })}
+            {slices}
           </svg>
           <div className="pie-chart-center">
             <span className="pie-chart-total">{total}</span>
